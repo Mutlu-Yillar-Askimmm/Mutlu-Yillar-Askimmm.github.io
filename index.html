@@ -1,273 +1,165 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2. Ayımız Kutlu Olsun ♥</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      overflow: hidden;
-      background: linear-gradient(to bottom, #ffeef8, #f5d7ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Segoe UI', sans-serif;
-      cursor: default;
-    }
-
-    #heart {
-      font-size: 200px;
-      color: #ff1493;
-      animation: pulse 1.5s infinite alternate;
-      transition: all 2s ease-out;
-    }
-
-    @keyframes pulse {
-      from { transform: scale(1); }
-      to { transform: scale(1.1); }
-    }
-
-    #bouquet {
-      position: relative;
-      width: 600px;
-      height: 600px;
-      opacity: 0;
-      transition: opacity 2s;
-    }
-
-    .flower {
-      position: absolute;
-      width: 80px;
-      height: 300px;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      cursor: pointer;
-      opacity: 0;
-      transform-origin: bottom;
-    }
-
-    .stem {
-      width: 8px;
-      height: 100%;
-      background: linear-gradient(to top, #228B22, #90EE90);
-      margin: 0 auto;
-    }
-
-    .petals {
-      width: 80px;
-      height: 80px;
-      background: radial-gradient(circle at 30% 30%, #ff69b4, #da70d6, #ba55d3);
-      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-      margin: -40px auto 0;
-      box-shadow: 0 0 30px rgba(218, 112, 214, 0.6);
-      transition: all 0.5s;
-    }
-
-    .flower:hover .petals {
-      transform: scale(1.2);
-      box-shadow: 0 0 50px rgba(218, 112, 214, 0.9);
-    }
-
-    #modal {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      z-index: 100;
-    }
-
-    #modal img {
-      max-width: 90%;
-      max-height: 60vh;
-      border-radius: 15px;
-      margin: 20px 0;
-      box-shadow: 0 0 30px rgba(255,255,255,0.5);
-    }
-
-    #modal p {
-      font-size: 24px;
-      max-width: 800px;
-    }
-
-    #finalMessage {
-      opacity: 0;
-      font-size: 36px;
-      color: #ff1493;
-      text-align: center;
-      padding: 40px;
-      transition: opacity 3s;
-      text-shadow: 0 0 20px rgba(255,20,147,0.5);
-    }
-
-    #newFlowers {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-
-    .new-flower {
-      position: absolute;
-      font-size: 40px;
-      opacity: 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2. Ayımız Kutlu Olsun ♥</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(135deg, #ffeef8, #f5d7ff, #e6ccff);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Falling Petals */
+        .petals { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+        .petal { position: absolute; color: #ff69b4; font-size: 20px; opacity: 0.7; animation: fall linear infinite; }
+        @keyframes fall { 0% { transform: translateY(-100px) rotate(0); } 100% { transform: translateY(110vh) rotate(360deg); } }
+        /* Floating Hearts */
+        .hearts { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4; }
+        .fheart { position: absolute; color: #e63946; opacity: 0.4; animation: float 15s ease-in-out infinite; }
+        @keyframes float { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-30px) scale(1.2); } }
+        /* Intro Heart */
+        #introHeart { font-size: 120px; animation: pulse 1.5s infinite; cursor: pointer; z-index: 9999; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+        /* Bouquet Container */
+        #bouquetContainer { position: relative; width: 600px; height: 700px; opacity: 0; transition: opacity 2s; z-index: 10; }
+        #bouquetBase { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 500px; height: 500px; background: url('https://thumbs.dreamstime.com/b/vibrant-bouquet-purple-pink-white-blooms-vase-capture-beauty-nature-stunning-high-resolution-image-375356481.jpg') no-repeat center bottom; background-size: contain; }
+        .flower { position: absolute; bottom: 350px; width: 80px; cursor: pointer; opacity: 0; transform: scaleY(0); transform-origin: bottom; animation: grow 3s ease-out forwards; z-index: 11; }
+        .flower img { width: 100%; transition: transform 0.4s; }
+        .flower:hover img { transform: scale(1.3) rotate(10deg); }
+        /* Modal */
+        #modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 100; padding: 20px; text-align: center; }
+        #modal img { max-width: 90%; max-height: 60vh; border-radius: 20px; box-shadow: 0 0 40px rgba(255,105,180,0.8); margin: 20px 0; }
+        #modal p { font-size: 28px; font-family: 'Great Vibes', cursive; color: #ff69b4; }
+        /* Final Message */
+        #finalMessage { opacity: 0; font-size: 40px; text-align: center; padding: 50px; transition: opacity 3s; color: #da70d6; font-family: 'Great Vibes', cursive; text-shadow: 0 0 30px rgba(218,112,214,0.8); line-height: 1.6; z-index: 20; }
+        /* Flash */
+        #flash { position: fixed; inset: 0; background: white; opacity: 0; pointer-events: none; z-index: 9998; transition: opacity 0.4s; }
+        .flash-active { opacity: 0.8 !important; }
+    </style>
 </head>
 <body>
 
-  <!-- 1. Büyük kalp -->
-  <div id="heart">♥</div>
+    <!-- Intro -->
+    <div id="introHeart">♥</div>
 
-  <!-- 2. Çiçek buketi -->
-  <div id="bouquet"></div>
+    <!-- Petals & Hearts -->
+    <div class="petals" id="petals"></div>
+    <div class="hearts" id="hearts"></div>
 
-  <!-- Modal (fotoğraf + mesaj) -->
-  <div id="modal">
-    <img id="modalImg" src="">
-    <p id="modalText"></p>
-    <p>(Kapatmak için herhangi bir yere tıkla)</p>
-  </div>
+    <!-- Bouquet -->
+    <div id="bouquetContainer">
+        <div id="bouquetBase"></div>
+    </div>
 
-  <!-- Son mesaj -->
-  <div id="finalMessage">
-    Buraya senin özel mesajını yaz ♥<br><br>
-    Örneğin:<br>
-    "2. ayımız kutlu olsun hayatım! <br>
-    Seninle geçirdiğim her an bir öncekinden daha güzel. <br>
-    Sonsuza kadar seninle ♥"
-  </div>
+    <!-- Modal -->
+    <div id="modal">
+        <img id="modalImg" src="">
+        <p id="modalText"></p>
+        <p style="font-size:18px; margin-top:30px; font-family:'Playfair Display';">(Kapatmak için tıklayın)</p>
+    </div>
 
-  <!-- Müzik -->
-  <audio id="bgMusic" loop>
-    <source src="your-music.mp3" type="audio/mpeg">
-    Tarayıcın ses desteklemiyor.
-  </audio>
+    <!-- Final -->
+    <div id="finalMessage">
+        Buraya senin özel uzun mesajını yaz ♥<br><br>
+        Örneğin:<br>
+        "2. ayımız kutlu olsun aşkım!<br>
+        Seninle geçirdiğim her an bir rüya gibi...<br>
+        Sonsuza kadar seninle olmak istiyorum.<br>
+        Seni çok seviyorum ♥"
+    </div>
 
-  <script>
-    const heart = document.getElementById('heart');
-    const bouquet = document.getElementById('bouquet');
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modalImg');
-    const modalText = document.getElementById('modalText');
-    const finalMessage = document.getElementById('finalMessage');
-    const music = document.getElementById('bgMusic');
+    <!-- Flash -->
+    <div id="flash"></div>
 
-    // Her çiçeğe ait mesaj ve fotoğraf (BURAYI DEĞİŞTİR)
-    const messages = [
-      { text: "İlk tanıştığımız günü hatırlıyor musun? Gözlerinle büyülenmiştim ♥", img: "flower1.jpg" },
-      { text: "Birlikte geçirdiğimiz ilk kahvaltı... En güzel sabahları seninle yaşıyorum.", img: "flower2.jpg" },
-      { text: "Senin gülüşün dünyadaki en güzel ses.", img: "flower3.jpg" },
-      { text: "Birlikte izlediğimiz o film gecesi... Sarılıp uyuyakalmıştık ♥", img: "flower4.jpg" },
-      { text: "Her sabah sana 'günaydın' demek için uyanıyorum.", img: "flower5.jpg" },
-      { text: "Seninle geçirdiğim her saniye bir ömre bedel.", img: "flower6.jpg" },
-      { text: "Kalbim artık sadece senin için atıyor.", img: "flower7.jpg" },
-      { text: "Birlikte daha nice 2. aylar, 2. yıllar yaşayalım ♥", img: "flower8.jpg" },
-      { text: "Seni sevmek hayatımın en güzel kararıydı.", img: "flower9.jpg" },
-      { text: "Gözlerinle her bakışında yeniden aşık oluyorum.", img: "flower10.jpg" },
-      { text: "Sen benim en güzel hayalim, en tatlı gerçeğimsin.", img: "flower11.jpg" },
-      { text: "Sonsuza kadar seninle ♥", img: "flower12.jpg" }
-    ];
+    <!-- Music -->
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
 
-    let clickedCount = 0;
+    <script>
+        const introHeart = document.getElementById('introHeart');
+        const bouquetContainer = document.getElementById('bouquetContainer');
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modalImg');
+        const modalText = document.getElementById('modalText');
+        const finalMessage = document.getElementById('finalMessage');
+        const flash = document.getElementById('flash');
+        const music = document.getElementById('bgMusic');
 
-    // İlk kalp tıklama
-    document.body.addEventListener('click', function startExperience(e) {
-      if (heart.style.display !== 'none') {
-        heart.style.transform = 'scale(3)';
-        heart.style.opacity = '0';
-        music.play();
-        setTimeout(() => {
-          heart.style.display = 'none';
-          showBouquet();
-        }, 2000);
-        document.body.removeEventListener('click', startExperience);
-      }
-    });
+        // Çiçek mesajları ve fotoğrafları (BURAYI DEĞİŞTİR)
+        const messages = [
+            { text: "İlk tanıştığımız o büyülü an ♥", img: "https://cbx-prod.b-cdn.net/COLOURBOX64993014.jpg?width=800&height=800&quality=70" },
+            { text: "Birlikte geçirdiğimiz en güzel sabahlar", img: "https://plus.unsplash.com/premium_photo-1661313650449-198faa2840d5?fm=jpg&q=60&w=3000" },
+            { text: "Gülüşünle aydınlanan dünyam", img: "https://thumbs.dreamstime.com/b/happy-couple-closeup-portrait-young-guy-giving-women-piggy-back-ride-kissing-face-moments-positive-human-emotions-45429676.jpg" },
+            { text: "Sarılıp uyuduğumuz o geceler", img: "https://thumbs.dreamstime.com/b/happy-young-couple-hugging-kissing-home-happy-young-couple-hugging-kissing-home-husband-wife-hugging-enjoying-265824147.jpg" },
+            { text: "Her gün yeniden aşık oluyorum sana", img: "https://cbx-prod.b-cdn.net/COLOURBOX48487087.jpg?width=800&height=800&quality=70" },
+            { text: "Seninle her an bir masal", img: "https://thumbs.dreamstime.com/b/moment-kiss-happy-young-couple-love-hugging-looking-deep-eyes-each-other-well-dressed-summer-117700889.jpg" },
+            { text: "Kalbim sadece senin için atıyor", img: "https://cbx-prod.b-cdn.net/COLOURBOX36608630.jpg?width=800&height=800&quality=70" },
+            { text: "2. ayımız kutlu olsun bebeğim ♥", img: "https://www.shutterstock.com/image-photo/young-stylish-couple-lovers-hugging-260nw-2357928809.jpg" },
+            { text: "En güzel hayalim, en tatlı gerçeğimsin", img: "https://www.shutterstock.com/image-photo/happy-stylish-couple-love-hugging-260nw-674585521.jpg" },
+            { text: "Gözlerine bakınca sonsuzluğu görüyorum", img: "https://www.shutterstock.com/image-photo/couple-kissing-outdoors-holding-drinks-260nw-2579079233.jpg" },
+            { text: "Seni sevmek hayatımın anlamı", img: "https://thumbs.dreamstime.com/b/happy-couple-closeup-portrait-young-guy-giving-women-piggy-back-ride-kissing-face-moments-positive-human-emotions-45429676.jpg" },
+            { text: "Sonsuza kadar benim ol ♥", img: "https://plus.unsplash.com/premium_photo-1661313650449-198faa2840d5?fm=jpg&q=60&w=3000" }
+        ];
 
-    function showBouquet() {
-      bouquet.style.opacity = '1';
+        let clicked = 0;
 
-      // 12 çiçek oluştur
-      for (let i = 0; i < 12; i++) {
-        const flower = document.createElement('div');
-        flower.className = 'flower';
-        flower.style.left = `${50 + (i - 6) * 8}%`; // yayılma
-        flower.style.animationDelay = `${i * 0.3}s`;
-
-        flower.innerHTML = `
-          <div class="stem"></div>
-          <div class="petals"></div>
-        `;
-
-        // Büyüme animasyonu
-        flower.style.animation = 'grow 3s ease-out forwards';
-        bouquet.appendChild(flower);
-
-        flower.addEventListener('click', () => {
-          if (!flower.classList.contains('clicked')) {
-            flower.classList.add('clicked');
-            modalImg.src = messages[i].img;
-            modalText.textContent = messages[i].text;
-            modal.style.display = 'flex';
-            clickedCount++;
-
-            if (clickedCount === 12) {
-              setTimeout(finalScene, 1500);
+        // Falling petals
+        function createPetals() {
+            const petalsDiv = document.getElementById('petals');
+            for (let i = 0; i < 40; i++) {
+                const p = document.createElement('div');
+                p.className = 'petal';
+                p.innerHTML = '🌸';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                p.style.animationDelay = Math.random() * 10 + 's';
+                petalsDiv.appendChild(p);
             }
-          }
+        }
+
+        // Floating hearts
+        function createHearts() {
+            const heartsDiv = document.getElementById('hearts');
+            const pos = [{l:'10%',t:'20%'},{l:'80%',t:'30%'},{l:'20%',t:'70%'},{l:'70%',t:'15%'},{l:'50%',t:'80%'}];
+            pos.forEach((p,i) => {
+                const h = document.createElement('div');
+                h.className = 'fheart';
+                h.innerHTML = '♥';
+                h.style.left = p.l; h.style.top = p.t; h.style.fontSize = (20 + i*10) + 'px';
+                h.style.animationDelay = i*2 + 's';
+                heartsDiv.appendChild(h);
+            });
+        }
+
+        // Start
+        introHeart.addEventListener('click', () => {
+            introHeart.style.transform = 'scale(5)';
+            introHeart.style.opacity = '0';
+            music.play();
+            music.volume = 0;
+            let vol = 0;
+            const fade = setInterval(() => { vol += 0.02; music.volume = Math.min(vol, 0.3); if (vol >= 0.3) clearInterval(fade); }, 200);
+            flash.classList.add('flash-active');
+            setTimeout(() => flash.classList.remove('flash-active'), 400);
+            setTimeout(() => {
+                introHeart.style.display = 'none';
+                bouquetContainer.style.opacity = '1';
+                createPetals();
+                createHearts();
+                growFlowers();
+            }, 2000);
         });
-      }
-    }
 
-    // Modal kapatma
-    modal.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
-
-    function finalScene() {
-      // Yeni çiçek yağmuru
-      for (let i = 0; i < 40; i++) {
-        const nf = document.createElement('div');
-        nf.className = 'new-flower';
-        nf.textContent = '🌸';
-        nf.style.left = Math.random() * 100 + '%';
-        nf.style.animation = `fall ${3 + Math.random() * 2}s linear forwards`;
-        nf.style.animationDelay = `${i * 0.1}s`;
-        bouquet.appendChild(nf);
-      }
-
-      setTimeout(() => {
-        bouquet.style.transition = 'all 2s';
-        bouquet.style.opacity = '0';
-        setTimeout(() => {
-          bouquet.style.display = 'none';
-          finalMessage.style.opacity = '1';
-        }, 2000);
-      }, 3000);
-    }
-
-    // Animasyonlar
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes grow {
-        from { transform: scaleY(0); opacity: 0; }
-        to { transform: scaleY(1); opacity: 1; }
-      }
-      @keyframes fall {
-        from { transform: translateY(-100px); opacity: 0; }
-        to { transform: translateY(700px); opacity: 1; }
-      }
-    `;
-    document.head.appendChild(style);
-  </script>
-</body>
-</html>
+        // Flowers
+        function growFlowers() {
+            const positions = ['15%','25%','35%','45%','55%','65%','75%','85%','20%','40%','60%','80%'];
+            const delays = [0.2,0.6,1.0,0.4,0.8,1.2,0.5,0.9,1.4,0.3,1.1,0.7];
